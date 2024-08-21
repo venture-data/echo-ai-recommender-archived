@@ -76,18 +76,6 @@ def find_closest_matches(query, csv_df, threshold=30, rating_weight=0.05, produc
     # print(f"DEBUG: Embedding results:\n{embedding_results[['product_name', 'normalized_ratings']]}")
     return embedding_results.head(products_needed)
 
-def find_closest_matches(query, product_names, threshold=5):
-    """
-    Calculate Levenshtein distance for each product name and return those within the threshold.
-    """
-    matches = []
-    for product in product_names:
-        distance = Levenshtein.distance(query, product)
-        if distance <= threshold:
-            matches.append((product, distance))
-    # Sort matches by distance (closest first)
-    matches = sorted(matches, key=lambda x: x[1])
-    return [match[0] for match in matches]
 
 def parse_embeddings(csv_df, query, rating_weight=0.05, top_n=100):
     # Split the query into components (assuming the query contains all three components)
