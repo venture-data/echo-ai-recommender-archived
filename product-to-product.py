@@ -1,14 +1,14 @@
-import pandas as pd
+# import pandas as pd
 import numpy as np
 import torch
-from sklearn.metrics.pairwise import cosine_similarity
-from sentence_transformers import SentenceTransformer, util
+# from sklearn.metrics.pairwise import cosine_similarity
+from sentence_transformers import util
 from main import prod2prod_embeddings, model_semantic_search
 
 
 """
     Work Flow:
-        1. A person Selects a Product
+        1. A person Selects a Product /
             - Embeddings are used to suggest similar products in terms of name/aisle/department (give weights to ratings)
         2. A user Searches for a Product
             - We need to show exact matches of the product (give weights to ratings)
