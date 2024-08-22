@@ -1,7 +1,7 @@
 from fuzzywuzzy import process
 from nltk.corpus import wordnet
 
-def correct_spelling(query, choices, threshold=80):
+def get_correct_spelling(query, choices, threshold=80):
     """
     Corrects the spelling of the given query by matching it with the closest valid words.
 
