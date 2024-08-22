@@ -8,6 +8,7 @@ import pandas as pd
 from main import prod2prod_embeddings, model_semantic_search
 import nltk
 from nltk.corpus import wordnet
+from fuzzywuzzy import process
 
 
 """
