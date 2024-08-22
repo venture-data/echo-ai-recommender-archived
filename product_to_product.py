@@ -25,6 +25,24 @@ from nltk.corpus import wordnet
             - Then use embeddings to get the products, and give weights to ratings
 """
 
+def correct_spelling(query, choices, threshold=80):
+    """
+    Corrects the spelling of the given query by matching it with the closest valid words.
+
+    Args:
+        query (str): The original search query.
+        choices (list): A list of valid words (e.g., product names, dictionary words).
+        threshold (int): The similarity threshold to consider a match (default: 80).
+
+    Returns:
+        str: The corrected query if a match is found; otherwise, the original query.
+    """
+    best_match, score = process.extractOne(query, choices)
+    
+    if score >= threshold:
+        return best_match
+    else:
+        return query
 
 def get_synonyms(query):
     """
