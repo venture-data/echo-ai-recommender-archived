@@ -78,6 +78,17 @@ def find_closest_matches(query, csv_df, threshold=30, rating_weight=0.05, produc
 
 
 def parse_embeddings(csv_df, query, rating_weight=0.05, top_n=100):
+    """_summary_
+
+    Args:
+        csv_df (dataframe): its the data frame which will be used to return the products
+        query (string): it's the search query
+        rating_weight (float, optional): how much priority does the rating has to the search. Defaults to 0.05.
+        top_n (int, optional): number of products to return. Defaults to 100.
+
+    Returns:
+        dataframe: the products with sorting
+    """
     # Split the query into components (assuming the query contains all three components)
     query_product_name = query
     query_aisle = query
