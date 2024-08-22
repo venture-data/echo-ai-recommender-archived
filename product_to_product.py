@@ -22,7 +22,7 @@ from main import prod2prod_embeddings, model_semantic_search
             - Then use fuzzy to correct spellings
             - Then use embeddings to get the products, and give weights to ratings
 """
-def find_closest_matches(query, csv_df, threshold=30, rating_weight=0.05, products_needed=40):
+def get_closest_matches(query, csv_df, threshold=30, rating_weight=0.05, products_needed=40):
     """
     Calculate Levenshtein distance for each product name and return those within the threshold.
     Ratings are only used for sorting and not for filtering.
@@ -66,18 +66,18 @@ def find_closest_matches(query, csv_df, threshold=30, rating_weight=0.05, produc
         else:
             # print("DEBUG: Insufficient matches, falling back to embedding-based search.")
             # Fall back to embedding-based search and concatenate the results
-            embedding_results = parse_embeddings(csv_df, query)
+            embedding_results = get_products_from_embeddings(csv_df, query)
             # print(f"DEBUG: Embedding results:\n{embedding_results[['product_name', 'normalized_ratings']]}")
             return pd.concat([filtered_results, embedding_results]).drop_duplicates().head(products_needed)
 
     # If no direct matches are found, fallback to embedding-based search
     # print("DEBUG: No direct matches found, performing embedding-based search.")
-    embedding_results = parse_embeddings(csv_df, query)
+    embedding_results = get_products_from_embeddings(csv_df, query)
     # print(f"DEBUG: Embedding results:\n{embedding_results[['product_name', 'normalized_ratings']]}")
     return embedding_results.head(products_needed)
 
 
-def parse_embeddings(csv_df, query, rating_weight=0.05, top_n=100):
+def get_products_from_embeddings(csv_df, query, rating_weight=0.05, top_n=100):
     """_summary_
 
     Args:
