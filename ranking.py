@@ -2,7 +2,7 @@
 Workflow for the ranking file:
     funtctions:
         search_page_request(query): If the function is called, it simply calls find_closest_matches (from product-to-product import find_closest_matches)
-        in_cart_request(product_id, user_id): This function will call user_info_retrieval (placeholder), then it'll check if user has at least 3 unqiue order_id against the user_id
+        product_page_request(product_id, user_id): This function will call user_info_retrieval (placeholder), then it'll check if user has at least 3 unqiue order_id against the user_id
                             If yes:
                                 1. then we will call user_group_products function (placeholder), it'll take in the cluster number (from df returned by user_info_retrieval),
                                 and product_id which is passed to in_cart_request function and will get a list of product_ids
@@ -14,7 +14,7 @@ Workflow for the ranking file:
                             If No: 
                                 we will skip user_group_products and user_frequently_bought_products and use products from just frequently_bought_products and parse_embeddings, and ideally
                                 use 3 from frequently_bought_products and 2 from parse_embeddings
-        product_page_request()
+        in_cart_request()
 """
 
 # Placeholder functions (to be implemented elsewhere)
@@ -59,7 +59,7 @@ def search_page_request(query):
     # Call the find_closest_matches function with the query
     return find_closest_matches(query, products_with_ratings_aisle_department, threshold=threshold, rating_weight=rating_weight, products_needed=products_needed)
 
-def in_cart_request(product_id, user_id):
+def product_page_request(product_id, user_id):
     """
     Handles the in-cart recommendations based on user history and product similarity.
 
