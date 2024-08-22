@@ -47,21 +47,16 @@ def get_closest_matches(query, csv_df, threshold=30, rating_weight=0.05, product
     """
     Calculate Levenshtein distance for each product name and return those within the threshold.
     Ratings are only used for sorting and not for filtering.
-    If no close matches are found or if distance increases significantly, fall back to parse_embeddings.
     """
-    # print(f"\n--- DEBUG: Starting search for query: '{query}' ---")
 
-    # First, use string filtering to find direct matches
+    # Step 1: Exact Match Search
     filtered_df = csv_df[csv_df['product_name'].str.contains(query, case=False, na=False)]
-    # print(f"DEBUG: Filtered DataFrame based on string match:\n{filtered_df[['product_name', 'normalized_ratings']]}")
 
-    # If direct matches are found, further refine them using Levenshtein distance
     if not filtered_df.empty:
         filtered_products = []
         for index, row in filtered_df.iterrows():
             product_name = row['product_name']
             distance = Levenshtein.distance(query.lower(), product_name.lower())
-            # print(f"DEBUG: Comparing '{query}' with '{product_name}': Levenshtein distance = {distance}")
 
             # Boost score for exact substring matches
             if query.lower() in product_name.lower():
@@ -71,31 +66,26 @@ def get_closest_matches(query, csv_df, threshold=30, rating_weight=0.05, product
             if distance <= threshold:
                 filtered_products.append((index, distance))
 
-        # Now, sort the filtered products by weighted score (distance + rating)
-        sorted_products = sorted(filtered_products, key=lambda x: (1 - rating_weight) * (1 - (x[1] / threshold)) + rating_weight * csv_df.loc[x[0], 'normalized_ratings'], reverse=True)
-        # print(f"DEBUG: Sorted matches (index, weighted score): {sorted_products}")
+        # Sort the filtered products by weighted score (distance + rating)
+        sorted_products = sorted(
+            filtered_products, 
+            key=lambda x: (1 - rating_weight) * (1 - (x[1] / threshold)) + rating_weight * csv_df.loc[x[0], 'normalized_ratings'], 
+            reverse=True
+        )
 
         # Get the indices of the top products after sorting
         match_indices = [match[0] for match in sorted_products]
         filtered_results = csv_df.iloc[match_indices]
-        # print(f"DEBUG: Final selected products:\n{filtered_results[['product_name', 'normalized_ratings']]}")
 
         # If the number of filtered products is sufficient, return them
         if len(filtered_results) >= products_needed:
-            # print("DEBUG: Returning filtered results.")
             return filtered_results.head(products_needed)
         else:
-            # print("DEBUG: Insufficient matches, falling back to embedding-based search.")
-            # Fall back to embedding-based search and concatenate the results
-            embedding_results = get_products_from_embeddings(csv_df, query)
-            # print(f"DEBUG: Embedding results:\n{embedding_results[['product_name', 'normalized_ratings']]}")
-            return pd.concat([filtered_results, embedding_results]).drop_duplicates().head(products_needed)
+            # Return the available filtered results
+            return filtered_results.head(products_needed)
 
-    # If no direct matches are found, fallback to embedding-based search
-    # print("DEBUG: No direct matches found, performing embedding-based search.")
-    embedding_results = get_products_from_embeddings(csv_df, query)
-    # print(f"DEBUG: Embedding results:\n{embedding_results[['product_name', 'normalized_ratings']]}")
-    return embedding_results.head(products_needed)
+    # If no direct matches are found, return an empty DataFrame
+    return pd.DataFrame()
 
 
 def get_products_from_embeddings(csv_df, query, rating_weight=0.05, top_n=100):
