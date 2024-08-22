@@ -22,6 +22,25 @@ from main import prod2prod_embeddings, model_semantic_search
             - Then use fuzzy to correct spellings
             - Then use embeddings to get the products, and give weights to ratings
 """
+
+
+def get_synonyms(query):
+    """
+    Generate synonyms for words in the query using WordNet.
+
+    Args:
+        query (str): The original search query.
+
+    Returns:
+        list: A list of synonyms for the words in the query.
+    """
+    synonyms = []
+    for word in query.lower().split():
+        for syn in wordnet.synsets(word):
+            for lemma in syn.lemmas():
+                synonyms.append(lemma.name())
+    return list(set(synonyms))  # Return unique synonyms
+
 def get_closest_matches(query, csv_df, threshold=30, rating_weight=0.05, products_needed=40):
     """
     Calculate Levenshtein distance for each product name and return those within the threshold.
