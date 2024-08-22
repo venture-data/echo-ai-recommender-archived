@@ -19,7 +19,7 @@ Workflow for the ranking file:
 """
 
 # Importing the required function from product-to-product
-from product_to_product import find_closest_matches
+from product_to_product import get_closest_matches
 from data_loader import products_with_ratings_aisle_department
 
 # Placeholder functions (to be implemented elsewhere)
@@ -59,7 +59,7 @@ def search_page_request(query):
     products_needed = 40
 
     # Call the find_closest_matches function with the query
-    return find_closest_matches(query, products_with_ratings_aisle_department, threshold=threshold, rating_weight=rating_weight, products_needed=products_needed)
+    return get_closest_matches(query, products_with_ratings_aisle_department, threshold=threshold, rating_weight=rating_weight, products_needed=products_needed)
 
 def product_page_request(product_id, user_id):
     """
