@@ -1,8 +1,6 @@
-# import pandas as pd
 import numpy as np
 import torch
 import Levenshtein
-# from sklearn.metrics.pairwise import cosine_similarity
 from sentence_transformers import util
 import pandas as pd
 from main import prod2prod_embeddings, model_semantic_search
