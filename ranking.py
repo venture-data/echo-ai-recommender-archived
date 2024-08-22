@@ -17,6 +17,10 @@ Workflow for the ranking file:
         in_cart_request()
 """
 
+# Importing the required function from product-to-product
+from product_to_product import find_closest_matches
+from data_loader import products_with_ratings_aisle_department
+
 # Placeholder functions (to be implemented elsewhere)
 def user_info_retrieval(user_id):
     pass
@@ -36,9 +40,6 @@ def get_product_name(product_id):
 def user_frequently_bought_products(user_id, product_id):
     pass
 
-# Importing the required function from product-to-product
-from product_to_product import find_closest_matches
-from data_loader import products_with_ratings_aisle_department
 
 def search_page_request(query):
     """
