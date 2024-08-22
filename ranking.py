@@ -15,6 +15,7 @@ Workflow for the ranking file:
                                 we will skip user_group_products and user_frequently_bought_products and use products from just frequently_bought_products and parse_embeddings, and ideally
                                 use 3 from frequently_bought_products and 2 from parse_embeddings
         in_cart_request()
+        most_popular_items()
 """
 
 # Importing the required function from product-to-product
