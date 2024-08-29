@@ -1,7 +1,11 @@
 """
 Workflow for the ranking file:
     funtctions:
-        search_page_request(query): If the function is called, it simply calls find_closest_matches (from product-to-product import find_closest_matches)
+        search_page_request(query): If the function is called:
+                            It'll tale in take in the user query
+                            it'll first seach using get_closest_matches
+                            if the products are less than products_needed go to 
+
         product_page_request(product_id, user_id): This function will call user_info_retrieval (placeholder), then it'll check if user has at least 3 unqiue order_id against the user_id
                             If yes:
                                 1. then we will call user_group_products function (placeholder), it'll take in the cluster number (from df returned by user_info_retrieval),
