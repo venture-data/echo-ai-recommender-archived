@@ -19,7 +19,7 @@ from main import prod2prod_embeddings, model_semantic_search
                                 Chips Ahoy!
             - Then use fuzzy to correct spellings
             - Then use embeddings to get the products, and give weights to ratings
-"""
+""" 
 
 
 def get_closest_matches(query, csv_df, threshold=30, rating_weight=0.05, products_needed=40):
