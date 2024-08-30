@@ -67,7 +67,7 @@ def search_page_request(query):
     # Step 2: Check if the number of products found is less than needed
     if len(closest_matches_df) < products_needed:
         # Fetch additional products using embeddings
-        additional_products_df = get_products_from_embeddings(query)
+        additional_products_df = get_products_from_embeddings(query, products_with_ratings_aisle_department, rating_weight=rating_weight, top_n=products_needed)
 
         # Append additional products to the closest matches
         combined_df = closest_matches_df.append(additional_products_df, ignore_index=True)
