@@ -67,7 +67,7 @@ def get_closest_matches(query, csv_df, threshold=30, rating_weight=0.05, product
     return pd.DataFrame()
 
 
-def get_products_from_embeddings(csv_df, query, rating_weight=0.05, top_n=100):
+def get_products_from_embeddings(query, csv_df, rating_weight=0.05, top_n=100):
     """_summary_
 
     Args:
