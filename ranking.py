@@ -24,7 +24,7 @@ Workflow for the ranking file:
 """
 
 # Importing the required function from product-to-product
-from product_to_product import get_closest_matches
+from product_to_product import get_closest_matches, get_products_from_embeddings
 from data_loader import products_with_ratings_aisle_department
 
 # Placeholder functions (to be implemented elsewhere)
@@ -46,7 +46,6 @@ def get_product_name(product_id):
 def user_frequently_bought_products(user_id, product_id):
     pass
 
-
 def search_page_request(query):
     """
     Handles the request to search for products based on a query.
@@ -57,14 +56,46 @@ def search_page_request(query):
     Returns:
         DataFrame: The DataFrame containing the closest matching products.
     """
-
     # Placeholder values for the other parameters
     threshold = 30
     rating_weight = 0.05
     products_needed = 40
 
-    # Call the find_closest_matches function with the query
-    return get_closest_matches(query, products_with_ratings_aisle_department, threshold=threshold, rating_weight=rating_weight, products_needed=products_needed)
+    # Step 1: Get closest matches using the query
+    closest_matches_df = get_closest_matches(query, products_with_ratings_aisle_department, threshold=threshold, rating_weight=rating_weight, products_needed=products_needed)
+
+    # Step 2: Check if the number of products found is less than needed
+    if len(closest_matches_df) < products_needed:
+        # Fetch additional products using embeddings
+        additional_products_df = get_products_from_embeddings(query)
+
+        # Append additional products to the closest matches
+        combined_df = closest_matches_df.append(additional_products_df, ignore_index=True)
+    else:
+        combined_df = closest_matches_df
+
+    # Step 3: Return the top products up to the required number
+    return combined_df.head(products_needed)
+
+
+# def search_page_request(query):
+#     """
+#     Handles the request to search for products based on a query.
+
+#     Args:
+#         query (str): The search query input by the user.
+
+#     Returns:
+#         DataFrame: The DataFrame containing the closest matching products.
+#     """
+
+#     # Placeholder values for the other parameters
+#     threshold = 30
+#     rating_weight = 0.05
+#     products_needed = 40
+
+#     # Call the find_closest_matches function with the query
+#     return get_closest_matches(query, products_with_ratings_aisle_department, threshold=threshold, rating_weight=rating_weight, products_needed=products_needed)
 
 def product_page_request(product_id, user_id):
     """
