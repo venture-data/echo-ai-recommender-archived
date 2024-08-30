@@ -71,11 +71,21 @@ def search_page_request(query):
 
         # Append additional products to the closest matches
         combined_df = closest_matches_df.append(additional_products_df, ignore_index=True)
+        del closest_matches_df  # Delete the original closest matches DataFrame
     else:
         combined_df = closest_matches_df
 
-    # Step 3: Return the top products up to the required number
-    return combined_df.head(products_needed)
+    # Step 3: Ensure no duplicates and limit to products_needed using indexing
+    combined_df = combined_df.drop_duplicates()
+
+    # Extract the top 'products_needed' using index
+    top_products_df = combined_df.iloc[:products_needed].reset_index(drop=True)
+
+    # Delete the combined DataFrame
+    del combined_df
+
+    # Return the new DataFrame with top 'products_needed' products
+    return top_products_df
 
 
 # def search_page_request(query):
