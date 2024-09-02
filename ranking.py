@@ -33,6 +33,7 @@ Workflow for the ranking file:
 # Importing the required function from product-to-product
 from product_to_product import get_closest_matches, get_products_from_embeddings
 from data_loader import products_with_ratings_aisle_department
+import pandas as pd
 
 # Placeholder functions (to be implemented elsewhere)
 def user_info_retrieval(user_id):
