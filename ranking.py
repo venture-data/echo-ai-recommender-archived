@@ -19,7 +19,14 @@ Workflow for the ranking file:
                             If No: 
                                 we will skip user_group_products and user_frequently_bought_products and use products from just frequently_bought_products and parse_embeddings, and ideally
                                 use 3 from frequently_bought_products and 2 from parse_embeddings
-        in_cart_request()
+        in_cart_request(): This function will call user_info_retrieval (placeholder), then it'll check if user has at least 3 unqiue order_id against the user_id
+                            If yes:
+                                1. then we will call user_group_products function (placeholder), it'll take in the cluster number (from df returned by user_info_retrieval),
+                                and product_id which is passed to in_cart_request function and will get a list of product_ids
+                                2. then it'll call frequently_bought_products function, it'll take in product_id which is passed to in_cart_request function, it'll also return a list of product_ids
+                                3. ideally we will need to return a df with 3 products from user_group_productsand 2 from frequently_bought_products
+                            If No:
+                                Skip user_group_products function and just give top 5 from frequently_bought_products
         most_popular_items()
 """
 
