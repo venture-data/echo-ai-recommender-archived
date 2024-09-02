@@ -194,3 +194,43 @@ def product_page_request(product_id, user_id):
     # Ensure at most 5 unique recommendations
     return final_recommendations[:5]
 
+def in_cart_request(product_id, user_id):
+    """
+    Handles the in-cart recommendations based on user history.
+
+    Args:
+        product_id (int): The product ID for the current item in the cart.
+        user_id (int): The user ID of the customer.
+
+    Returns:
+        DataFrame: A DataFrame containing the recommended product IDs.
+    """
+    # Retrieve user information
+    user_info_df = user_info_retrieval(user_id)
+
+    # Check if the user has at least 3 unique order_ids
+    unique_orders = user_info_df['order_id'].nunique() if not user_info_df.empty else 0
+
+    if unique_orders >= 3:
+        # User has sufficient purchase history
+
+        # Step 1: Call user_group_products function
+        cluster_number = user_info_df['cluster_number'].iloc[0]  # Assuming cluster_number is retrieved from user_info_df
+        user_group_recommendations = user_group_products(cluster_number, product_id)
+        
+        # Step 2: Call frequently_bought_products function
+        frequently_bought_recommendations = frequently_bought_products(product_id)
+
+        # Step 3: Combine results to prepare final recommendations using indexing
+        recommended_products = pd.concat([
+            user_group_recommendations.iloc[:3],  # Select first 3 products from user_group_products
+            frequently_bought_recommendations.iloc[:2]  # Select first 2 products from frequently_bought_products
+        ], ignore_index=True)
+
+    else:
+        # User has limited purchase history
+        # Get top 5 products from frequently_bought_products using indexing
+        recommended_products = frequently_bought_products(product_id).iloc[:5]
+
+    return recommended_products
+
