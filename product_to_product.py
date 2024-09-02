@@ -27,7 +27,6 @@ def get_closest_matches(query, csv_df, threshold=30, rating_weight=0.05, product
     Calculate Levenshtein distance for each product name and return those within the threshold.
     Ratings are only used for sorting and not for filtering.
     """
-
     # Step 1: Exact Match Search
     filtered_df = csv_df[csv_df['product_name'].str.contains(query, case=False, na=False)]
 
@@ -45,11 +44,13 @@ def get_closest_matches(query, csv_df, threshold=30, rating_weight=0.05, product
             if distance <= threshold:
                 filtered_products.append((index, distance))
 
-        # Sort the filtered products by weighted score (distance + rating)
+        # Sort the filtered products by Levenshtein distance first, then by weighted score
         sorted_products = sorted(
-            filtered_products, 
-            key=lambda x: (1 - rating_weight) * (1 - (x[1] / threshold)) + rating_weight * csv_df.loc[x[0], 'normalized_ratings'], 
-            reverse=True
+            filtered_products,
+            key=lambda x: (
+                x[1],  # Sort primarily by Levenshtein distance (lower is better)
+                -(1 - rating_weight) * (1 - (x[1] / threshold)) + rating_weight * csv_df.loc[x[0], 'normalized_ratings']
+            )
         )
 
         # Get the indices of the top products after sorting
@@ -58,13 +59,14 @@ def get_closest_matches(query, csv_df, threshold=30, rating_weight=0.05, product
 
         # If the number of filtered products is sufficient, return them
         if len(filtered_results) >= products_needed:
-            return filtered_results.head(products_needed)
+            return filtered_results.iloc[:products_needed]  # Use indexing to get the top products_needed
         else:
             # Return the available filtered results
-            return filtered_results.head(products_needed)
+            return filtered_results.iloc[:products_needed]  # Return all available results up to products_needed
 
     # If no direct matches are found, return an empty DataFrame
     return pd.DataFrame()
+
 
 
 def get_products_from_embeddings(query, csv_df, rating_weight=0.05, top_n=100):
