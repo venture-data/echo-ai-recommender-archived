@@ -3,7 +3,7 @@ import torch
 import Levenshtein
 from sentence_transformers import util
 import pandas as pd
-from main import prod2prod_embeddings, model_semantic_search
+from data_loader import prod2prod_embeddings, model_semantic_search
 
 
 """
