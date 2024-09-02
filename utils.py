@@ -1,6 +1,8 @@
 from fuzzywuzzy import process
 from nltk.corpus import wordnet
-from data_loader import user_purchase_data
+# from data_loader import user_purchase_data
+
+user_purchase_data = []
 
 def get_correct_spelling(query, choices, threshold=80):
     """
