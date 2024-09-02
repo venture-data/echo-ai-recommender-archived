@@ -54,7 +54,7 @@ def get_product_name(product_id):
 def user_frequently_bought_products(user_id, product_id):
     pass
 
-def search_page_request(query):
+def search_page_request(query, threshold = 30):
     """
     Handles the request to search for products based on a query.
 
@@ -64,8 +64,7 @@ def search_page_request(query):
     Returns:
         DataFrame: The DataFrame containing the closest matching products.
     """
-    # Placeholder values for the other parameters
-    threshold = 30
+    # Placeholder values for the other parameter
     rating_weight = 0.05
     products_needed = 40
 
