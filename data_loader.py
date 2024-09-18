@@ -23,4 +23,4 @@ with open('/content/drive/MyDrive/recommender_system/Embeddings/frequent_itemset
 
 # Load association rules
 with open('/content/drive/MyDrive/recommender_system/Embeddings/association_rules.pkl', 'rb') as f:
-    rules = pickle.load(f)
+    rules_freq_bought = pickle.load(f)
