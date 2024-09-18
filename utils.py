@@ -1,8 +1,35 @@
 from fuzzywuzzy import process
 from nltk.corpus import wordnet
+from fuzzywuzzy import fuzz
 # from data_loader import user_purchase_data
 
 user_purchase_data = []
+
+
+def extract_product_name(query, csv_df, threshold=90):
+    product_names = csv_df['product_name'].unique()
+    match, score = process.extractOne(query, product_names, scorer=fuzz.token_set_ratio)
+    if score >= threshold:
+        return match
+    return None
+
+def exact_match_product_name(query, csv_df):
+    product_names = csv_df['product_name'].unique()
+    query_lower = query.lower().strip()
+    exact_matches = [name for name in product_names if name.lower() == query_lower]
+    return exact_matches[0] if exact_matches else None
+
+def extract_aisle(query, csv_df):
+    # List of known aisles
+    aisles = csv_df['aisle'].unique()
+    matches = [aisle for aisle in aisles if aisle.lower() in query.lower()]
+    return matches[0] if matches else None
+
+def extract_department(query, csv_df):
+    # List of known departments
+    departments = csv_df['department'].unique()
+    matches = [dept for dept in departments if dept.lower() in query.lower()]
+    return matches[0] if matches else None
 
 def get_correct_spelling(query, choices, threshold=80):
     """
