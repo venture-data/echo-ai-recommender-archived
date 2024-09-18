@@ -17,9 +17,9 @@ products_with_ratings_aisle_department = pd.read_csv('/content/drive/MyDrive/rec
 with open('/content/drive/MyDrive/recommender_system/Embeddings/group_association_rules_dic.pkl', 'rb') as f:
     group_association_rules_dic = pickle.load(f)
 
-# Load frequent itemsets
-with open('/content/drive/MyDrive/recommender_system/Embeddings/frequent_itemsets.pkl', 'rb') as f:
-    frequent_itemsets = pickle.load(f)
+# # Load frequent itemsets
+# with open('/content/drive/MyDrive/recommender_system/Embeddings/frequent_itemsets.pkl', 'rb') as f:
+#     frequent_itemsets = pickle.load(f)
 
 # Load association rules
 with open('/content/drive/MyDrive/recommender_system/Embeddings/association_rules.pkl', 'rb') as f:

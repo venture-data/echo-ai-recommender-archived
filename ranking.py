@@ -32,15 +32,12 @@ Workflow for the ranking file:
 
 # Importing the required function from product-to-product
 from frequently_bought_together import get_frequently_bought_products, get_frequently_bought_user_based
-from product_to_product import get_closest_matches, get_products_from_embeddings
+from product_to_product import get_closest_matches, get_products_from_embeddings, all_in_one_search
 from data_loader import products_with_ratings_aisle_department
 import pandas as pd
 
 # Placeholder functions (to be implemented elsewhere)
 def user_info_retrieval(user_id):
-    pass
-
-def parse_embeddings(product_name, top_n=5):
     pass
 
 def get_product_name(product_id):
@@ -84,7 +81,7 @@ def search_page_request(query, threshold = 30):
 
     # # Delete the combined DataFrame
     # del combined_df
-    recommended_products_semantic = get_products_from_embeddings(query, products_with_ratings_aisle_department, top_n=10)
+    recommended_products_semantic = all_in_one_search(query, products_with_ratings_aisle_department, top_n=10)
     top_products_df = recommended_products_semantic.head(3)
     # Return the new DataFrame with top 'products_needed' products
     return top_products_df
@@ -143,7 +140,7 @@ def product_page_request(product_id, user_id):
 
         # Step 3: Call parse_embeddings function to get product recommendations
         product_name = get_product_name(product_id)
-        embedding_recommendations = parse_embeddings(product_name, top_n=5)
+        embedding_recommendations = get_products_from_embeddings(product_name, products_with_ratings_aisle_department, top_n=5)
         recommended_products.update(embedding_recommendations)
 
         # Step 4: Call user_frequently_bought_products function
@@ -171,7 +168,7 @@ def product_page_request(product_id, user_id):
     else:
         # Scenario: User has limited purchase history, focus on frequently bought and embeddings
         frequently_bought_recommendations = get_frequently_bought_products(product_id)
-        embedding_recommendations = parse_embeddings(product_name, top_n=5)
+        embedding_recommendations = get_products_from_embeddings(product_name, products_with_ratings_aisle_department,top_n=5)
 
         final_recommendations = list(frequently_bought_recommendations)[:3] + list(embedding_recommendations)[:2]
 
