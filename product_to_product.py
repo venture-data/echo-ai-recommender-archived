@@ -17,6 +17,7 @@ from data_loader import prod2prod_embeddings, model_semantic_search
             - Keep all the products that are close by
                     (TEST) :
                                 Chips Ahoy!
+                                fruit yogurt
             - Then use fuzzy to correct spellings
             - Then use embeddings to get the products, and give weights to ratings
 """ 
