@@ -4,7 +4,8 @@ import Levenshtein
 from sentence_transformers import util
 import pandas as pd
 from data_loader import prod2prod_embeddings, model_semantic_search
-
+from utils import extract_product_name, exact_match_product_name, extract_aisle, extract_department
+from data_loader import product_name_embedding, aisle_embedding, department_embedding
 
 """
     Work Flow:
