@@ -3,6 +3,11 @@ import torch
 from sentence_transformers import SentenceTransformer
 
 prod2prod_embeddings = torch.load('/content/drive/MyDrive/recommender_system/Ammar Embeddings/semantic_model_combined_embeddings.pt')
+
+product_name_embedding = torch.load("")
+aisle_embedding = torch.load("")
+department_embedding = torch.load("")
+
 model_semantic_search = SentenceTransformer('multi-qa-mpnet-base-cos-v1')
 
 
