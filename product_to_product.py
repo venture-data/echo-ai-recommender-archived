@@ -125,7 +125,7 @@ def get_products_from_embeddings(query, csv_df, rating_weight=0.05, top_n=100):
 
     return csv_df.iloc[product_indices]
 
-def all_in_one_search(query, model_semantic_search, prod2prod_embeddings, csv_df, rating_weight=0.05, top_n=100):
+def all_in_one_search(query, csv_df, rating_weight=0.05, top_n=100):
     # Check for exact product name match
     exact_match = exact_match_product_name(query, csv_df)
     if exact_match:

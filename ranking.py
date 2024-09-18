@@ -68,29 +68,30 @@ def search_page_request(query, threshold = 30):
     rating_weight = 0.05
     products_needed = 40
 
-    # Step 1: Get closest matches using the query
-    closest_matches_df = get_closest_matches(query, products_with_ratings_aisle_department, threshold=threshold, rating_weight=rating_weight, products_needed=products_needed)
+    # # Step 1: Get closest matches using the query
+    # closest_matches_df = get_closest_matches(query, products_with_ratings_aisle_department, threshold=threshold, rating_weight=rating_weight, products_needed=products_needed)
 
-    # Step 2: Check if the number of products found is less than needed
-    if len(closest_matches_df) < products_needed:
-        # Fetch additional products using embeddings
-        additional_products_df = get_products_from_embeddings(query, products_with_ratings_aisle_department, rating_weight=rating_weight, top_n=products_needed)
+    # # Step 2: Check if the number of products found is less than needed
+    # if len(closest_matches_df) < products_needed:
+    #     # Fetch additional products using embeddings
+    #     additional_products_df = get_products_from_embeddings(query, products_with_ratings_aisle_department, rating_weight=rating_weight, top_n=products_needed)
 
-        # Append additional products to the closest matches
-        combined_df = closest_matches_df.append(additional_products_df, ignore_index=True)
-        del closest_matches_df  # Delete the original closest matches DataFrame
-    else:
-        combined_df = closest_matches_df
+    #     # Append additional products to the closest matches
+    #     combined_df = closest_matches_df.append(additional_products_df, ignore_index=True)
+    #     del closest_matches_df  # Delete the original closest matches DataFrame
+    # else:
+    #     combined_df = closest_matches_df
 
-    # Step 3: Ensure no duplicates and limit to products_needed using indexing
-    combined_df = combined_df.drop_duplicates()
+    # # Step 3: Ensure no duplicates and limit to products_needed using indexing
+    # combined_df = combined_df.drop_duplicates()
 
-    # Extract the top 'products_needed' using index
-    top_products_df = combined_df.iloc[:products_needed].reset_index(drop=True)
+    # # Extract the top 'products_needed' using index
+    # top_products_df = combined_df.iloc[:products_needed].reset_index(drop=True)
 
-    # Delete the combined DataFrame
-    del combined_df
-
+    # # Delete the combined DataFrame
+    # del combined_df
+    recommended_products_semantic = get_products_from_embeddings(query, products_with_ratings_aisle_department, top_n=10)
+    top_products_df = recommended_products_semantic.head(3)
     # Return the new DataFrame with top 'products_needed' products
     return top_products_df
 
