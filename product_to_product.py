@@ -123,3 +123,105 @@ def get_products_from_embeddings(query, csv_df, rating_weight=0.05, top_n=100):
     product_indices = [i[0] for i in sim_scores]
 
     return csv_df.iloc[product_indices]
+
+def all_in_one_search(query, model_semantic_search, prod2prod_embeddings, csv_df, rating_weight=0.05, top_n=100):
+    # Check for exact product name match
+    exact_match = exact_match_product_name(query, csv_df)
+    if exact_match:
+        # Return the exact match with highest priority
+        exact_match_df = csv_df[csv_df['product_name'] == exact_match].copy()
+        exact_match_df['similarity_score'] = 1.0  # Perfect match
+        return exact_match_df
+    
+    # Proceed with fuzzy matching if no exact match is found
+    query_product_name = extract_product_name(query, csv_df)
+    query_aisle = extract_aisle(query, csv_df)
+    query_department = extract_department(query, csv_df)
+    
+    # Initialize weights
+    weights_dict = {
+        'product_name': 0.7,
+        'aisle': 0.2,
+        'department': 0.1
+    }
+    
+    # Collect the components present in the query
+    present_components = []
+    if query_product_name:
+        present_components.append('product_name')
+    if query_aisle:
+        present_components.append('aisle')
+    if query_department:
+        present_components.append('department')
+    
+    # If no components are found, default to using the entire query as product name
+    if not present_components:
+        query_product_name = query  # Use the entire query
+        present_components.append('product_name')
+    
+    # Adjust weights to prioritize product name when present
+    if 'product_name' in present_components:
+        # Increase weight for product_name
+        weights_dict['product_name'] = 0.9
+        remaining_weight = 0.1
+        other_components = [comp for comp in present_components if comp != 'product_name']
+        total_other_weight = sum(weights_dict[comp] for comp in other_components)
+        for comp in other_components:
+            weights_dict[comp] = (weights_dict[comp] / total_other_weight) * remaining_weight if total_other_weight else 0
+    
+    # Normalize the weights for the present components
+    total_weight = sum(weights_dict[comp] for comp in present_components)
+    normalized_weights = {comp: weights_dict[comp] / total_weight for comp in present_components}
+    
+    embeddings = []
+    weights = []
+    
+    # Generate embeddings only for the components present
+    if query_product_name:
+        product_name_embedding = model_semantic_search.encode(query_product_name, convert_to_tensor=True).to('cuda')
+        embeddings.append(product_name_embedding)
+        weights.append(normalized_weights['product_name'])
+    if query_aisle:
+        aisle_embedding = model_semantic_search.encode(query_aisle, convert_to_tensor=True).to('cuda')
+        embeddings.append(aisle_embedding)
+        weights.append(normalized_weights.get('aisle', 0))
+    if query_department:
+        department_embedding = model_semantic_search.encode(query_department, convert_to_tensor=True).to('cuda')
+        embeddings.append(department_embedding)
+        weights.append(normalized_weights.get('department', 0))
+    
+    # Weighted averaging of embeddings
+    query_embedding = torch.stack(embeddings)
+    weights_tensor = torch.tensor(weights).unsqueeze(1).to('cuda')  # Shape: (num_components, 1)
+    query_embedding = torch.sum(query_embedding * weights_tensor, dim=0)  # Weighted sum
+    query_embedding = query_embedding / sum(weights)  # Normalize by sum of weights
+    query_embedding = query_embedding.unsqueeze(0)  # Add batch dimension
+    
+    # Ensure dimensions match
+    assert query_embedding.shape[1] == prod2prod_embeddings.shape[1], "Query embedding dimension mismatch."
+    
+    # Compute cosine similarity
+    cosine_sim_query = util.pytorch_cos_sim(query_embedding, prod2prod_embeddings).cpu().numpy()[0]
+    
+    # Apply boosted ratings
+    boosted_ratings = np.power(csv_df['normalized_ratings'].values, 2)
+    
+    # Combine scores without normalization to preserve exact match significance
+    combined_scores = (1 - rating_weight) * cosine_sim_query + rating_weight * boosted_ratings
+    
+    # If we had a fuzzy match for product name, boost its score
+    if query_product_name:
+        fuzzy_match_indices = csv_df[csv_df['product_name'] == query_product_name].index
+        for idx in fuzzy_match_indices:
+            combined_scores[idx] += combined_scores.max() * 0.1  # Boost by 10% of the max score
+    
+    # Sort and select top N products
+    sim_scores = list(enumerate(combined_scores))
+    sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)[:top_n]
+    product_indices = [i[0] for i in sim_scores]
+    top_products_df = csv_df.iloc[product_indices].copy()
+    
+    # Add similarity score to the dataframe
+    top_products_df['similarity_score'] = [combined_scores[i[0]] for i in sim_scores]
+    
+    return top_products_df
