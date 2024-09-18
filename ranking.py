@@ -31,6 +31,7 @@ Workflow for the ranking file:
 """
 
 # Importing the required function from product-to-product
+from frequently_bought_together import get_frequently_bought_products, get_frequently_bought_user_based
 from product_to_product import get_closest_matches, get_products_from_embeddings
 from data_loader import products_with_ratings_aisle_department
 import pandas as pd
@@ -39,20 +40,13 @@ import pandas as pd
 def user_info_retrieval(user_id):
     pass
 
-def user_group_products(cluster_number, product_id):
-    pass
-
-def frequently_bought_products(product_id):
-    pass
-
 def parse_embeddings(product_name, top_n=5):
     pass
 
 def get_product_name(product_id):
     pass
 
-def user_frequently_bought_products(user_id, product_id):
-    pass
+
 
 def search_page_request(query, threshold = 30):
     """
@@ -140,11 +134,11 @@ def product_page_request(product_id, user_id):
 
         # Step 1: Call user_group_products function
         cluster_number = user_info_df['cluster_number'].iloc[0]  # Assuming cluster_number is retrieved from user_info_df
-        user_group_recommendations = user_group_products(cluster_number, product_id)
+        user_group_recommendations = get_frequently_bought_user_based(cluster_number, product_id)
         recommended_products.update(user_group_recommendations)
 
         # Step 2: Call frequently_bought_products function
-        frequently_bought_recommendations = frequently_bought_products(product_id)
+        frequently_bought_recommendations = get_frequently_bought_products(product_id)
         recommended_products.update(frequently_bought_recommendations)
 
         # Step 3: Call parse_embeddings function to get product recommendations
@@ -153,8 +147,8 @@ def product_page_request(product_id, user_id):
         recommended_products.update(embedding_recommendations)
 
         # Step 4: Call user_frequently_bought_products function
-        user_frequent_recommendations = user_frequently_bought_products(user_id, product_id)
-        recommended_products.update(user_frequent_recommendations)
+        # user_frequent_recommendations = user_frequently_bought_products(user_id, product_id)
+        # recommended_products.update(user_frequent_recommendations)
 
         # Ensure we get at most 5 unique products and prioritize the recommendations
         final_recommendations = list(recommended_products)[:5]
@@ -163,7 +157,7 @@ def product_page_request(product_id, user_id):
         if len(final_recommendations) < 5:
             remaining_slots = 5 - len(final_recommendations)
             backup_recommendations = (
-                list(user_frequent_recommendations) +
+                # list(user_frequent_recommendations) +
                 list(frequently_bought_recommendations) +
                 list(user_group_recommendations) +
                 list(embedding_recommendations)
@@ -176,7 +170,7 @@ def product_page_request(product_id, user_id):
 
     else:
         # Scenario: User has limited purchase history, focus on frequently bought and embeddings
-        frequently_bought_recommendations = frequently_bought_products(product_id)
+        frequently_bought_recommendations = get_frequently_bought_products(product_id)
         embedding_recommendations = parse_embeddings(product_name, top_n=5)
 
         final_recommendations = list(frequently_bought_recommendations)[:3] + list(embedding_recommendations)[:2]
@@ -217,10 +211,10 @@ def in_cart_request(product_id, user_id):
 
         # Step 1: Call user_group_products function
         cluster_number = user_info_df['cluster_number'].iloc[0]  # Assuming cluster_number is retrieved from user_info_df
-        user_group_recommendations = user_group_products(cluster_number, product_id)
+        user_group_recommendations = get_frequently_bought_user_based(cluster_number, product_id)
         
         # Step 2: Call frequently_bought_products function
-        frequently_bought_recommendations = frequently_bought_products(product_id)
+        frequently_bought_recommendations = get_frequently_bought_products(product_id)
 
         # Step 3: Combine results to prepare final recommendations using indexing
         recommended_products = pd.concat([
@@ -231,7 +225,7 @@ def in_cart_request(product_id, user_id):
     else:
         # User has limited purchase history
         # Get top 5 products from frequently_bought_products using indexing
-        recommended_products = frequently_bought_products(product_id).iloc[:5]
+        recommended_products = get_frequently_bought_products(product_id).iloc[:5]
 
     return recommended_products
 
