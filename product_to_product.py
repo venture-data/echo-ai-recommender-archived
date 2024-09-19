@@ -71,16 +71,8 @@ def get_closest_matches(query, csv_df, threshold=30, rating_weight=0.05, product
 
 
 def get_products_from_embeddings(query, csv_df, rating_weight=0.05, top_n=100):
-    """_summary_
-
-    Args:
-        csv_df (dataframe): its the data frame which will be used to return the products
-        query (string): it's the search query
-        rating_weight (float, optional): how much priority does the rating has to the search. Defaults to 0.05.
-        top_n (int, optional): number of products to return. Defaults to 100.
-
-    Returns:
-        dataframe: the products with sorting
+    """
+    Returns products based on embeddings and similarity scores.
     """
     # Split the query into components (assuming the query contains all three components)
     query_product_name = query
@@ -121,10 +113,12 @@ def get_products_from_embeddings(query, csv_df, rating_weight=0.05, top_n=100):
     # Get the indices of the top N similar products
     sim_scores = sim_scores[:top_n]
 
-    # Get the product IDs of the top N similar products
+    # Get the product names or IDs of the top N similar products
     product_indices = [i[0] for i in sim_scores]
+    product_names = csv_df.iloc[product_indices]['product_name'].tolist()  # Assuming 'product_name' exists in csv_df
 
-    return csv_df.iloc[product_indices]
+    return product_names
+
 
 def all_in_one_search(query, csv_df, rating_weight=0.05, top_n=100):
     # Check for exact product name match
