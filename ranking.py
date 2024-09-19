@@ -120,17 +120,22 @@ def product_page_request(product_id, user_id):
         cluster_number = get_cluster_from_user_id(user_id)
         user_group_recommendations = get_frequently_bought_user_based(cluster_number, product_id)
         recommended_products.update(user_group_recommendations)
+        print(f"recommendations from user_group_recommendations: {user_group_recommendations}")
+
 
         # Step 2: Call frequently_bought_products function
         if not isinstance(product_id, list):
             product_id_list = [product_id]
         frequently_bought_recommendations = get_frequently_bought_products(product_id_list)
         recommended_products.update(frequently_bought_recommendations)
+        print(f"recommendations from frequently_bought_recommendations: {frequently_bought_recommendations}")
+
 
         # Step 3: Call parse_embeddings function to get product recommendations
         
         embedding_recommendations = get_products_from_embeddings(product_name, products_with_ratings_aisle_department, top_n=5)
         recommended_products.update(embedding_recommendations)
+        print(f"recommendations from embeddings: {embedding_recommendations}")
 
         # Step 4: Call user_frequently_bought_products function
         # user_frequent_recommendations = user_frequently_bought_products(user_id, product_id)
