@@ -211,6 +211,7 @@ def in_cart_request(product_id, user_id):
     unique_orders = user_info_df['order_id'].nunique() if not user_info_df.empty else 0
 
     if unique_orders >= 3:
+        print("user in cluster")
         # User has sufficient purchase history
 
         # Step 1: Call user_group_products function
@@ -230,9 +231,10 @@ def in_cart_request(product_id, user_id):
         ], ignore_index=True)
 
     else:
+        print("user not in cluster")
         # User has limited purchase history
         # Get top 5 products from frequently_bought_products using indexing
-        recommended_products = get_frequently_bought_products(product_id).iloc[:5]
+        recommended_products = get_frequently_bought_products[:5]
 
     return recommended_products
 
