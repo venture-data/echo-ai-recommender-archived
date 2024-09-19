@@ -91,7 +91,15 @@ def product_page_request(product_id, user_id):
     Returns:
         List[int]: A list of recommended product IDs (at most 5) for the user.
     """
-
+    # Convert product_id and user_id to integers immediately
+    try:
+        product_id = int(product_id)
+        user_id = int(user_id)
+    except ValueError:
+        # Handle cases where conversion fails
+        print(f"Invalid input: product_id={product_id}, user_id={user_id} must be integers.")
+        return None
+    
     # Placeholder: Retrieve user information
     user_info_df = user_info_retrieval(user_id)
     print(f"User Info:\n{user_info_df}")
