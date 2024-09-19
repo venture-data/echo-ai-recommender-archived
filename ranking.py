@@ -234,7 +234,9 @@ def in_cart_request(product_id, user_id):
         print("user not in cluster")
         # User has limited purchase history
         # Get top 5 products from frequently_bought_products using indexing
-        recommended_products = get_frequently_bought_products[:5]
+        if not isinstance(product_id, list):
+            product_id_list = [product_id]
+        recommended_products = get_frequently_bought_products(product_id_list)[:5]
 
     return recommended_products
 
