@@ -134,6 +134,7 @@ def product_page_request(product_id, user_id):
         # Step 3: Call parse_embeddings function to get product recommendations
         
         embedding_recommendations = get_products_from_embeddings(product_name, products_with_ratings_aisle_department, top_n=5)
+        embedding_recommendations = [rec for rec in embedding_recommendations if rec != product_name] 
         recommended_products.update(embedding_recommendations)
         print(f"recommendations from embeddings: {embedding_recommendations}")
 
@@ -167,6 +168,7 @@ def product_page_request(product_id, user_id):
             product_id_list = [product_id]
         frequently_bought_recommendations = get_frequently_bought_products(product_id_list)
         embedding_recommendations = get_products_from_embeddings(product_name, products_with_ratings_aisle_department,top_n=5)
+        embedding_recommendations = [rec for rec in embedding_recommendations if rec != product_name] 
 
         final_recommendations = list(frequently_bought_recommendations)[:3] + list(embedding_recommendations)[:2]
 
