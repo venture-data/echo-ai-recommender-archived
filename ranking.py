@@ -225,10 +225,8 @@ def in_cart_request(product_id, user_id):
         frequently_bought_recommendations = get_frequently_bought_products(product_id_list)
 
         # Step 3: Combine results to prepare final recommendations using indexing
-        recommended_products = pd.concat([
-            user_group_recommendations.iloc[:3],  # Select first 3 products from user_group_products
-            frequently_bought_recommendations.iloc[:2]  # Select first 2 products from frequently_bought_products
-        ], ignore_index=True)
+        recommended_products = user_group_recommendations[:3]  # Select first 3 products from user_group_recommendations
+        recommended_products += frequently_bought_recommendations[:2]  # Select first 2 products from frequently_bought_recommendations
 
     else:
         print("user not in cluster")
