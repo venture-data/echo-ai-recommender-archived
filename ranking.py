@@ -33,16 +33,9 @@ Workflow for the ranking file:
 # Importing the required function from product-to-product
 from frequently_bought_together import get_frequently_bought_products, get_frequently_bought_user_based
 from product_to_product import get_products_from_embeddings, all_in_one_search
+from utils import user_info_retrieval, get_product_name, get_cluster_from_user_id
 from data_loader import products_with_ratings_aisle_department
 import pandas as pd
-
-# Placeholder functions (to be implemented elsewhere)
-def user_info_retrieval(user_id):
-    pass
-
-def get_product_name(product_id):
-    pass
-
 
 
 def search_page_request(query, threshold = 30):
@@ -87,25 +80,6 @@ def search_page_request(query, threshold = 30):
     return top_products_df
 
 
-# def search_page_request(query):
-#     """
-#     Handles the request to search for products based on a query.
-
-#     Args:
-#         query (str): The search query input by the user.
-
-#     Returns:
-#         DataFrame: The DataFrame containing the closest matching products.
-#     """
-
-#     # Placeholder values for the other parameters
-#     threshold = 30
-#     rating_weight = 0.05
-#     products_needed = 40
-
-#     # Call the find_closest_matches function with the query
-#     return get_closest_matches(query, products_with_ratings_aisle_department, threshold=threshold, rating_weight=rating_weight, products_needed=products_needed)
-
 def product_page_request(product_id, user_id):
     """
     Handles the in-cart recommendations based on user history and product similarity.
@@ -130,12 +104,15 @@ def product_page_request(product_id, user_id):
         # Scenario: User has sufficient purchase history
 
         # Step 1: Call user_group_products function
-        cluster_number = user_info_df['cluster_number'].iloc[0]  # Assuming cluster_number is retrieved from user_info_df
+        # cluster_number = user_info_df['cluster_number'].iloc[0]  # Assuming cluster_number is retrieved from user_info_df
+        cluster_number = get_cluster_from_user_id(user_id)
         user_group_recommendations = get_frequently_bought_user_based(cluster_number, product_id)
         recommended_products.update(user_group_recommendations)
 
         # Step 2: Call frequently_bought_products function
-        frequently_bought_recommendations = get_frequently_bought_products(product_id)
+        if not isinstance(product_id, list):
+            product_id_list = [product_id]
+        frequently_bought_recommendations = get_frequently_bought_products(product_id_list)
         recommended_products.update(frequently_bought_recommendations)
 
         # Step 3: Call parse_embeddings function to get product recommendations
@@ -167,7 +144,9 @@ def product_page_request(product_id, user_id):
 
     else:
         # Scenario: User has limited purchase history, focus on frequently bought and embeddings
-        frequently_bought_recommendations = get_frequently_bought_products(product_id)
+        if not isinstance(product_id, list):
+            product_id_list = [product_id]
+        frequently_bought_recommendations = get_frequently_bought_products(product_id_list)
         embedding_recommendations = get_products_from_embeddings(product_name, products_with_ratings_aisle_department,top_n=5)
 
         final_recommendations = list(frequently_bought_recommendations)[:3] + list(embedding_recommendations)[:2]
@@ -207,11 +186,14 @@ def in_cart_request(product_id, user_id):
         # User has sufficient purchase history
 
         # Step 1: Call user_group_products function
-        cluster_number = user_info_df['cluster_number'].iloc[0]  # Assuming cluster_number is retrieved from user_info_df
+        # cluster_number = user_info_df['cluster_number'].iloc[0]  # Assuming cluster_number is retrieved from user_info_df
+        cluster_number = get_cluster_from_user_id(user_id)
         user_group_recommendations = get_frequently_bought_user_based(cluster_number, product_id)
         
         # Step 2: Call frequently_bought_products function
-        frequently_bought_recommendations = get_frequently_bought_products(product_id)
+        if not isinstance(product_id, list):
+            product_id_list = [product_id]
+        frequently_bought_recommendations = get_frequently_bought_products(product_id_list)
 
         # Step 3: Combine results to prepare final recommendations using indexing
         recommended_products = pd.concat([

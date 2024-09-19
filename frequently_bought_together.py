@@ -1,13 +1,23 @@
 from data_loader import group_association_rules_dic, rules_freq_bought
+from utils import get_product_name
 
 # Function to get recommendations based on association rules
 def get_frequently_bought_products(cart_items, top_n=3):
+    # First, get unique product ids from the cart items
+    unique_cart_items = list(set(cart_items))
+    
+    # Replace product IDs with product names
+    cart_items_names = [get_product_name(product_id) for product_id in unique_cart_items if get_product_name(product_id) is not None]
+    
     # Convert cart items to a frozenset to match the antecedents in association rules
-    cart_items_set = frozenset(cart_items)
+    cart_items_set = frozenset(cart_items_names)
+    
     # Find rules where the antecedents (items in the cart) are a subset of the rule antecedents
     recommendations = rules_freq_bought[rules_freq_bought['antecedents'].apply(lambda x: cart_items_set.issubset(x))]
+    
     # Sort the recommendations by confidence and lift, and return top N
     top_recommendations = recommendations[['consequents', 'confidence', 'lift']].sort_values(by='confidence', ascending=False).head(top_n)
+    
     return top_recommendations
 
 def get_frequently_bought_user_based(cluster_id, product_id, num_products=5):

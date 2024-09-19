@@ -29,14 +29,14 @@ department_embedding = torch.load(department_embedding_path)
 
 model_semantic_search = SentenceTransformer('multi-qa-mpnet-base-cos-v1')
 
+# dataframe loading
 products_with_ratings_aisle_department = pd.read_csv(products_with_ratings_path)
 user_id_cluster = pd.read_csv(user_id_cluster_path)
-orders_df_path = pd.read_csv(orders_df_path)
+orders_df = pd.read_csv(orders_df_path)
 
 with open(group_association_rules_path, 'rb') as f:
     group_association_rules_dic = pickle.load(f)
 
 with open(rules_freq_bought_path, 'rb') as f:
     rules_freq_bought = pickle.load(f)
-
 

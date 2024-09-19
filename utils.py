@@ -1,10 +1,34 @@
 from fuzzywuzzy import process
 from nltk.corpus import wordnet
 from fuzzywuzzy import fuzz
-# from data_loader import user_purchase_data
+from data_loader import orders_df, products_with_ratings_aisle_department, user_id_cluster
 
-user_purchase_data = []
+def get_product_name(product_id):
+    # Filter the products_with_ratings_aisle_department DataFrame to find the product_id
+    product_row = products_with_ratings_aisle_department[products_with_ratings_aisle_department['product_id'] == product_id]
+    
+    # Check if the product_id exists and return the product_name, otherwise return None
+    if not product_row.empty:
+        return product_row.iloc[0]['product_name']
+    else:
+        return None
 
+def get_cluster_from_user_id(user_id):
+    # Filter the user_id_cluster DataFrame to find the cluster for the given user_id
+    cluster_row = user_id_cluster[user_id_cluster['user_id'] == user_id]
+    
+    # Check if the user_id exists and return the cluster as an integer, otherwise return None
+    if not cluster_row.empty:
+        return int(cluster_row.iloc[0]['cluster'])
+    else:
+        return None
+
+def user_info_retrieval(user_id):
+    # Filter the orders_df to retrieve rows where user_id matches
+    user_orders_df = orders_df[orders_df['user_id'] == user_id]
+    
+    # Return the resulting DataFrame
+    return user_orders_df
 
 def extract_product_name(query, csv_df, threshold=90):
     product_names = csv_df['product_name'].unique()
@@ -66,17 +90,3 @@ def get_synonyms(query):
             for lemma in syn.lemmas():
                 synonyms.append(lemma.name())
     return list(set(synonyms))  # Return unique synonyms
-
-def user_info_retrieval(user_id):
-    """
-    Retrieves user information from the user purchase data DataFrame.
-
-    Args:
-        user_id (int): The user ID to filter the data.
-
-    Returns:
-        DataFrame: A DataFrame containing all rows where the user ID matches.
-    """
-    # Assuming user_purchase_data is a DataFrame loaded from another file
-    filtered_df = user_purchase_data[user_purchase_data['user_id'] == user_id]
-    return filtered_df
