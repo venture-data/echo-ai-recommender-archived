@@ -13,8 +13,7 @@ Workflow for the ranking file:
                                 and product_id which is passed to in_cart_request function and will get a list of product_ids
                                 2. then it'll call frequently_bought_products function, it'll take in product_id which is passed to in_cart_request function, it'll also return a list of product_ids
                                 3. then it'll call parse_embeddings function by passing in the product_name, top_n=5; we will retrieve product_name through product_id from get product_name function (placeholder)
-                                4. then it'll call user_frequently_bought_products (placeholder) and pass the product_id and will get a list of product_ids back.
-                                5. we need to send back at most 5 product ids for suggestions, we will ideally 2 from user_frequently_bought_products, 1 from frequently_bought_products, 1 from user_group_products, and 1 from parse_embeddings
+                                4. we need to send back at most 5 product ids for suggestions, we will ideally 2 from user_frequently_bought_products, 1 from frequently_bought_products, 1 from user_group_products, and 1 from parse_embeddings
                                     we will also make sure no duplicated product ids are being sent and we will also make sure if no products are return from a certain function it should be compensated by othe rfunctiosn so we ar enot sending less than 5 items
                             If No: 
                                 we will skip user_group_products and user_frequently_bought_products and use products from just frequently_bought_products and parse_embeddings, and ideally
