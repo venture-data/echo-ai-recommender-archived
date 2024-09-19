@@ -16,6 +16,7 @@ department_embedding_path = os.getenv('DEPARTMENT_EMBEDDING')
 
 products_with_ratings_path = os.getenv('PRODUCTS_WITH_RATINGS_DF')
 user_id_cluster_path = os.getenv('USER_ID_WITH_CLUSTER_DF')
+orders_df_path = os.getenv('ORDERS_DF')
 
 group_association_rules_path = os.getenv('GROUP_ASSOCIATION_RULES')
 rules_freq_bought_path = os.getenv('RULES_FREQ_BOUGHT')
@@ -30,6 +31,7 @@ model_semantic_search = SentenceTransformer('multi-qa-mpnet-base-cos-v1')
 
 products_with_ratings_aisle_department = pd.read_csv(products_with_ratings_path)
 user_id_cluster = pd.read_csv(user_id_cluster_path)
+orders_df_path = pd.read_csv(orders_df_path)
 
 with open(group_association_rules_path, 'rb') as f:
     group_association_rules_dic = pickle.load(f)
@@ -37,4 +39,4 @@ with open(group_association_rules_path, 'rb') as f:
 with open(rules_freq_bought_path, 'rb') as f:
     rules_freq_bought = pickle.load(f)
 
-    
+
