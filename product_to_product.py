@@ -200,6 +200,8 @@ def all_in_one_search(query, csv_df, rating_weight=0.05, top_n=100):
     query_embedding = query_embedding.unsqueeze(0)  # Add batch dimension
     
     # Ensure dimensions match
+    print(f"query_embedding shape: {query_embedding.shape[1]}")
+    print(f"prod2prod_embeddings shape: {prod2prod_embeddings.shape[1]}")
     assert query_embedding.shape[1] == prod2prod_embeddings.shape[1], "Query embedding dimension mismatch."
     
     # Compute cosine similarity
