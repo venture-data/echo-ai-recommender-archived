@@ -201,11 +201,11 @@ def all_in_one_search(query, csv_df, rating_weight=0.05, top_n=100):
     
     # Ensure dimensions match
     print(f"query_embedding shape: {query_embedding.shape[1]}")
-    print(f"prod2prod_embeddings shape: {prod2prod_embeddings.shape[1]}")
-    assert query_embedding.shape[1] == prod2prod_embeddings.shape[1], "Query embedding dimension mismatch."
+    print(f"prod2prod_embeddings shape: {product_name_embedding.shape[1]}")
+    assert query_embedding.shape[1] == product_name_embedding.shape[1], "Query embedding dimension mismatch."
     
     # Compute cosine similarity
-    cosine_sim_query = util.pytorch_cos_sim(query_embedding, prod2prod_embeddings).cpu().numpy()[0]
+    cosine_sim_query = util.pytorch_cos_sim(query_embedding, product_name_embedding).cpu().numpy()[0]
     
     # Apply boosted ratings
     boosted_ratings = np.power(csv_df['normalized_ratings'].values, 2)
