@@ -108,7 +108,7 @@ def product_page_request(product_id, user_id):
     unique_orders = user_info_df['order_id'].nunique()
     
     recommended_products = set()
-    product_name = get_product_name_uncased(product_id)
+    product_name = get_product_name(product_id)
     print(f"Product: {product_name}")
 
     if unique_orders >= 3:
