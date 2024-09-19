@@ -2,7 +2,7 @@ from data_loader import group_association_rules_dic, rules_freq_bought
 from utils import get_product_name, get_product_name_uncased
 
 # Function to get recommendations based on association rules
-def get_frequently_bought_products(cart_items, top_n=3):
+def get_frequently_bought_products(cart_items, top_n=5):
     # First, get unique product ids from the cart items
     unique_cart_items = list(set(cart_items))
 
