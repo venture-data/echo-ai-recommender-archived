@@ -195,6 +195,15 @@ def in_cart_request(product_id, user_id):
     Returns:
         DataFrame: A DataFrame containing the recommended product IDs.
     """
+
+    try:
+        product_id = int(product_id)
+        user_id = int(user_id)
+    except ValueError:
+        # Handle cases where conversion fails
+        print(f"Invalid input: product_id={product_id}, user_id={user_id} must be integers.")
+        return None
+    
     # Retrieve user information
     user_info_df = user_info_retrieval(user_id)
 
