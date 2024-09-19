@@ -180,8 +180,8 @@ def all_in_one_search(query, csv_df, rating_weight=0.05, top_n=100):
     
     # Generate embeddings only for the components present
     if query_product_name:
-        product_name_embedding = model_semantic_search.encode(query_product_name, convert_to_tensor=True).to('cuda')
-        embeddings.append(product_name_embedding)
+        product_name_embedding_1 = model_semantic_search.encode(query_product_name, convert_to_tensor=True).to('cuda')
+        embeddings.append(product_name_embedding_1)
         weights.append(normalized_weights['product_name'])
     if query_aisle:
         aisle_embedding = model_semantic_search.encode(query_aisle, convert_to_tensor=True).to('cuda')
@@ -200,8 +200,8 @@ def all_in_one_search(query, csv_df, rating_weight=0.05, top_n=100):
     query_embedding = query_embedding.unsqueeze(0)  # Add batch dimension
     
     # Ensure dimensions match
-    print(f"query_embedding shape: {query_embedding.shape[1]}")
-    print(f"prod2prod_embeddings shape: {product_name_embedding.shape[1]}")
+    # print(f"query_embedding shape: {query_embedding.shape[1]}")
+    # print(f"prod2prod_embeddings shape: {product_name_embedding.shape[1]}")
     assert query_embedding.shape[1] == product_name_embedding.shape[1], "Query embedding dimension mismatch."
     
     # Compute cosine similarity
