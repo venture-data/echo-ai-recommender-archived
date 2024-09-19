@@ -102,7 +102,7 @@ def product_page_request(product_id, user_id):
     
     # Placeholder: Retrieve user information
     user_info_df = user_info_retrieval(user_id)
-    print(f"User Info:\n{user_info_df}")
+    # print(f"User Info:\n{user_info_df}")
     
     # Check if the user has at least 3 unique order_ids
     unique_orders = user_info_df['order_id'].nunique()
@@ -112,6 +112,7 @@ def product_page_request(product_id, user_id):
     print(f"Product: {product_name}")
 
     if unique_orders >= 3:
+        print("user cluster available")
         # Scenario: User has sufficient purchase history
 
         # Step 1: Call user_group_products function
@@ -154,6 +155,8 @@ def product_page_request(product_id, user_id):
                     final_recommendations.append(product)
 
     else:
+        print("user cluster not available")
+
         # Scenario: User has limited purchase history, focus on frequently bought and embeddings
         if not isinstance(product_id, list):
             product_id_list = [product_id]
