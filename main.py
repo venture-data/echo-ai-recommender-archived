@@ -1,6 +1,10 @@
 import argparse
 from ranking import search_page_request, product_page_request, in_cart_request
 
+import pandas as pd
+pd.set_option('display.max_columns', None)
+pd.set_option('display.max_rows', None)
+
 def main():
     # Initialize the argument parser
     parser = argparse.ArgumentParser(description="Call different functions from ranking.py")
