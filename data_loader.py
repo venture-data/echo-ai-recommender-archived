@@ -22,10 +22,10 @@ group_association_rules_path = os.getenv('GROUP_ASSOCIATION_RULES')
 rules_freq_bought_path = os.getenv('RULES_FREQ_BOUGHT')
 
 # Load data using the paths
-prod2prod_embeddings = torch.load(prod2prod_embeddings_path)
-product_name_embedding = torch.load(product_name_embedding_path)
-aisle_embedding = torch.load(aisle_embedding_path)
-department_embedding = torch.load(department_embedding_path)
+prod2prod_embeddings = torch.load(prod2prod_embeddings_path, weights_only=True)
+product_name_embedding = torch.load(product_name_embedding_path, weights_only=True)
+aisle_embedding = torch.load(aisle_embedding_path, weights_only=True)
+department_embedding = torch.load(department_embedding_path, weights_only=True)
 
 model_semantic_search = SentenceTransformer('multi-qa-mpnet-base-cos-v1')
 
