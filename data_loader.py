@@ -36,3 +36,5 @@ with open(group_association_rules_path, 'rb') as f:
 
 with open(rules_freq_bought_path, 'rb') as f:
     rules_freq_bought = pickle.load(f)
+
+    
