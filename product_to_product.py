@@ -3,9 +3,8 @@ import torch
 import Levenshtein
 from sentence_transformers import util
 import pandas as pd
-from data_loader import prod2prod_embeddings, model_semantic_search
+from data_loader import prod2prod_embeddings, model_semantic_search, product_name_embedding, aisle_embedding, department_embedding
 from utils import extract_product_name, exact_match_product_name, extract_aisle, extract_department
-from data_loader import product_name_embedding, aisle_embedding, department_embedding
 
 """
     Work Flow:
@@ -97,6 +96,8 @@ def get_products_from_embeddings(query, csv_df, rating_weight=0.05, top_n=100):
     query_embedding = torch.cat([query_product_name_embedding, query_aisle_embedding, query_department_embedding], dim=-1).unsqueeze(0)
 
     # Ensure query_embedding has the correct dimensions
+    print(f"query_embedding shape: {query_embedding.shape[1]}")
+    print(f"prod2prod_embeddings shape: {prod2prod_embeddings.shape[1]}")
     assert query_embedding.shape[1] == prod2prod_embeddings.shape[1], "Query embedding dimension mismatch."
 
     # Compute cosine similarity between the query embedding and product embeddings
