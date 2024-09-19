@@ -5,9 +5,21 @@ from utils import get_product_name
 def get_frequently_bought_products(cart_items, top_n=3):
     # First, get unique product ids from the cart items
     unique_cart_items = list(set(cart_items))
+
+    # Replace product IDs with product names, converting product_id to an integer
+    cart_items_names = []
+    for product_id in unique_cart_items:
+        try:
+            # Convert product_id to integer
+            product_id_int = int(product_id)
+            product_name = get_product_name(product_id_int)
+            if product_name is not None:
+                cart_items_names.append(product_name)
+        except ValueError:
+            print(f"Invalid product_id: {product_id}. Skipping.")
     
-    # Replace product IDs with product names
-    cart_items_names = [get_product_name(product_id) for product_id in unique_cart_items if get_product_name(product_id) is not None]
+    # Debugging print statement to show the processed cart items
+    print(f'cart items: {cart_items_names}')
     
     # Convert cart items to a frozenset to match the antecedents in association rules
     cart_items_set = frozenset(cart_items_names)
