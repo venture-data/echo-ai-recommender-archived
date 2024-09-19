@@ -2,25 +2,33 @@ import torch
 import pickle
 import pandas as pd
 from sentence_transformers import SentenceTransformer
+from dotenv import load_dotenv
+import os
 
-prod2prod_embeddings = torch.load('/content/drive/MyDrive/recommender_system/Ammar Embeddings/semantic_model_combined_embeddings.pt')
+# Load environment variables
+load_dotenv()
 
-product_name_embedding = torch.load("")
-aisle_embedding = torch.load("")
-department_embedding = torch.load("")
+# Load file paths from .env
+prod2prod_embeddings_path = os.getenv('PROD2PROD_EMBEDDINGS')
+product_name_embedding_path = os.getenv('PRODUCT_NAME_EMBEDDING')
+aisle_embedding_path = os.getenv('AISLE_EMBEDDING')
+department_embedding_path = os.getenv('DEPARTMENT_EMBEDDING')
+products_with_ratings_path = os.getenv('PRODUCTS_WITH_RATINGS')
+group_association_rules_path = os.getenv('GROUP_ASSOCIATION_RULES')
+rules_freq_bought_path = os.getenv('RULES_FREQ_BOUGHT')
+
+# Load data using the paths
+prod2prod_embeddings = torch.load(prod2prod_embeddings_path)
+product_name_embedding = torch.load(product_name_embedding_path)
+aisle_embedding = torch.load(aisle_embedding_path)
+department_embedding = torch.load(department_embedding_path)
 
 model_semantic_search = SentenceTransformer('multi-qa-mpnet-base-cos-v1')
 
-products_with_ratings_aisle_department = pd.read_csv('/content/drive/MyDrive/recommender_system/Embeddings/product_random_normalized_ratings.csv')
-# users_with_orders = pd.read_csv('path_to_your_csv_file.csv')
+products_with_ratings_aisle_department = pd.read_csv(products_with_ratings_path)
 
-with open('/content/drive/MyDrive/recommender_system/Embeddings/group_association_rules_dic.pkl', 'rb') as f:
+with open(group_association_rules_path, 'rb') as f:
     group_association_rules_dic = pickle.load(f)
 
-# # Load frequent itemsets
-# with open('/content/drive/MyDrive/recommender_system/Embeddings/frequent_itemsets.pkl', 'rb') as f:
-#     frequent_itemsets = pickle.load(f)
-
-# Load association rules
-with open('/content/drive/MyDrive/recommender_system/Embeddings/association_rules.pkl', 'rb') as f:
+with open(rules_freq_bought_path, 'rb') as f:
     rules_freq_bought = pickle.load(f)
