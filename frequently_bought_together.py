@@ -1,5 +1,5 @@
 from data_loader import group_association_rules_dic, rules_freq_bought
-from utils import get_product_name
+from utils import get_product_name, get_product_name_uncased
 
 # Function to get recommendations based on association rules
 def get_frequently_bought_products(cart_items, top_n=3):
@@ -12,7 +12,7 @@ def get_frequently_bought_products(cart_items, top_n=3):
         try:
             # Convert product_id to integer
             product_id_int = int(product_id)
-            product_name = get_product_name(product_id_int)
+            product_name = get_product_name_uncased(product_id_int)
             if product_name is not None:
                 cart_items_names.append(product_name)
         except ValueError:

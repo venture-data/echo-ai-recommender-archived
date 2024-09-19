@@ -33,7 +33,7 @@ Workflow for the ranking file:
 # Importing the required function from product-to-product
 from frequently_bought_together import get_frequently_bought_products, get_frequently_bought_user_based
 from product_to_product import get_products_from_embeddings, all_in_one_search
-from utils import user_info_retrieval, get_product_name, get_cluster_from_user_id
+from utils import user_info_retrieval, get_product_name, get_cluster_from_user_id, get_product_name_uncased
 from data_loader import products_with_ratings_aisle_department
 import pandas as pd
 
@@ -108,7 +108,7 @@ def product_page_request(product_id, user_id):
     unique_orders = user_info_df['order_id'].nunique()
     
     recommended_products = set()
-    product_name = get_product_name(product_id)
+    product_name = get_product_name_uncased(product_id)
     print(f"Product: {product_name}")
 
     if unique_orders >= 3:

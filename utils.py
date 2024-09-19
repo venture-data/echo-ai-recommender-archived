@@ -1,11 +1,21 @@
 from fuzzywuzzy import process
 from nltk.corpus import wordnet
 from fuzzywuzzy import fuzz
-from data_loader import orders_df, products_with_ratings_aisle_department, user_id_cluster
+from data_loader import orders_df, products_with_ratings_aisle_department, user_id_cluster, products_not_cased
 
 def get_product_name(product_id):
     # Filter the products_with_ratings_aisle_department DataFrame to find the product_id
     product_row = products_with_ratings_aisle_department[products_with_ratings_aisle_department['product_id'] == product_id]
+    
+    # Check if the product_id exists and return the product_name, otherwise return None
+    if not product_row.empty:
+        return product_row.iloc[0]['product_name']
+    else:
+        return None
+    
+def get_product_name_uncased(product_id):
+    # Filter the products_with_ratings_aisle_department DataFrame to find the product_id
+    product_row = products_not_cased[products_not_cased['product_id'] == product_id]
     
     # Check if the product_id exists and return the product_name, otherwise return None
     if not product_row.empty:
