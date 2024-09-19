@@ -94,12 +94,14 @@ def product_page_request(product_id, user_id):
 
     # Placeholder: Retrieve user information
     user_info_df = user_info_retrieval(user_id)
+    print(f"User Info:\n{user_info_df}")
     
     # Check if the user has at least 3 unique order_ids
     unique_orders = user_info_df['order_id'].nunique()
     
     recommended_products = set()
     product_name = get_product_name(product_id)
+    print(f"Product: {product_name}")
 
     if unique_orders >= 3:
         # Scenario: User has sufficient purchase history
