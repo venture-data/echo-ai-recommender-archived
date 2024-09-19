@@ -26,6 +26,7 @@ def get_frequently_bought_products(cart_items, top_n=3):
     
     # Find rules where the antecedents (items in the cart) are a subset of the rule antecedents
     recommendations = rules_freq_bought[rules_freq_bought['antecedents'].apply(lambda x: cart_items_set.issubset(x))]
+    print(f"recommendations: {recommendations}")
     
     # Extract only the product names from the 'consequents'
     top_recommendations = recommendations['consequents'].explode().unique().tolist()
