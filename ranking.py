@@ -99,6 +99,7 @@ def product_page_request(product_id, user_id):
     unique_orders = user_info_df['order_id'].nunique()
     
     recommended_products = set()
+    product_name = get_product_name(product_id)
 
     if unique_orders >= 3:
         # Scenario: User has sufficient purchase history
@@ -116,7 +117,7 @@ def product_page_request(product_id, user_id):
         recommended_products.update(frequently_bought_recommendations)
 
         # Step 3: Call parse_embeddings function to get product recommendations
-        product_name = get_product_name(product_id)
+        
         embedding_recommendations = get_products_from_embeddings(product_name, products_with_ratings_aisle_department, top_n=5)
         recommended_products.update(embedding_recommendations)
 
